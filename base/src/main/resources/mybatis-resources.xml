@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 全局启用或禁用缓存 -->
+        <setting name="cacheEnabled" value="false"/>
+        <!-- 全局禁用延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <!-- 配合延迟加载使用 -->
+        <setting name="aggressiveLazyLoading" value="true"/>
+        <!-- 执行器重用语句和批量更新:insert update 执行后不返回成功记录数-->
+        <setting name="defaultExecutorType" value="BATCH"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="com.showcase.restful.data.entity.Product" alias="productModel"/>
+    </typeAliases>
+</configuration>

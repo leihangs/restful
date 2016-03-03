@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.showcase.restful.data.mybatis.mappers.ProductMapper">
+
+    <!--定义表字段-->
+    <sql id="productAllColumns">
+        productid,
+        productname,
+        availabledate,
+        enddate,
+        status,
+        description
+    </sql>
+
+    <sql id="productWhereCondition">
+        <where>
+            <if test="productId != null and productId!=''">
+                and productid = #{productId}
+            </if>
+            <if test="productName != null and productName!=''">
+                and productname like '%${productName}%'
+            </if>
+            <if test="status != null and status!=''">
+                and status = #{status}
+            </if>
+            <if test="description != null and description!=''">
+                and description like '%${description}%'
+            </if>
+        </where>
+    </sql>
+
+    <!--定义属性与表字段的对应关系-->
+    <resultMap id="productResultMap" type="productModel">
+        <result column="productid" property="productId" javaType="Integer"/>
+        <result column="productname" property="productName" javaType="String"/>
+        <result column="availabledate" property="availableDate" javaType="Date"/>
+        <result column="enddate" property="endDate" javaType="Date"/>
+        <result column="status" property="status" javaType="String"/>
+        <result column="description" property="description" javaType="String"/>
+    </resultMap>
+
+    <!--查询单个对象-->
+    <select id="getProduct" resultMap="productResultMap" parameterType="int">
+        select
+        <include refid="productAllColumns"/>
+        from rest_product a
+        where a.productid = #{productId}
+    </select>
+
+    <!--查询多个对象(分页)-->
+    <select id="getProductListPage" resultMap="productResultMap" parameterType="java.util.Map">
+        select
+        <include refid="productAllColumns"/>
+        from rest_product a
+        <include refid="productWhereCondition"/>
+        <if test="orderBy != null and orderBy!=''">
+            order by #{orderBy} #{order}
+        </if>
+        limit #{startIndex},#{lastIndex}
+    </select>
+    <select id="getProductListPageCount" resultType="long" parameterType="java.util.Map">
+        select count(*) value
+        from rest_product a
+        <include refid="productWhereCondition"/>
+    </select>
+
+    <!--查询所有对象-->
+    <select id="getProductListAll" resultMap="productResultMap" parameterType="java.util.Map">
+        select
+        <include refid="productAllColumns"/>
+        from rest_product a
+    </select>
+
+    <!--新增-->
+    <insert id="saveproduct" parameterType="productModel">
+        insert into rest_product(<include refid="productAllColumns"/>)
+        values(
+        #{productId},
+        #{productName},
+        #{availableDate},
+        #{endDate},
+        #{status},
+        #{description}
+        )
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteProduct" parameterType="int">
+        delete  FROM rest_product where productid=#{productId}
+    </delete>
+
+    <!--更新-->
+    <update id="updateProduct" parameterType="productModel">
+        update rest_product
+        <set>
+            <if test="productId != null and productId!=''">
+                productid = #{productId},
+            </if>
+            <if test="productName != null and productName!=''">
+                productname = #{productName},
+            </if>
+            <if test="availableDate != null and availableDate!=''">
+                availabledate = #{availableDate},
+            </if>
+            <if test="endDate != null and endDate!=''">
+                enddate = #{endDate},
+            </if>
+            <if test="status != null and status!=''">
+                status = #{status},
+            </if>
+            <if test="description != null and description!=''">
+                description = #{description},
+            </if>
+        </set>
+        where productid = #{productId}
+    </update>
+
+</mapper>

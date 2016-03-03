@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="5 seconds">
+
+    <property name="log.base" value="/showcase/logs"/>
+
+    <!-- Console stdout -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--#INFO Appender (Store info message, rolling with daily,The default log for 30 days) -->
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.base}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--#ERROR Appender (Store error message, rolling with daily,The default log for 30 days) -->
+    <appender name="ErrorRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.base}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--#TraceFile Appender (Store debug message, rolling with 100M, 10 files, threshold is OFF)-->
+    <appender name="TraceRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base}-trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${log.base}-trace%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date %-4relative [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RecoredLoginErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base}-loginError.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${log.base}-loginError%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date %-4relative [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--Application log is appended to the RollingFile,The default level is INFO-->
+    <logger name="com.jsmall">
+        <appender-ref ref="RollingFile"/>
+    </logger>
+
+    <!--Application log is appended to the ErrorRollingFile,The default level is ERROR-->
+    <logger name="com.jsmall">
+        <appender-ref ref="ErrorRollingFile"/>
+    </logger>
+
+    <logger name="net.rubyeye.xmemcached" level="warn">
+        <appender-ref ref="RollingFile"/>
+    </logger>
+
+    <logger name="com.google.code.yanf4j" level="warn">
+        <appender-ref ref="RollingFile"/>
+    </logger>
+
+    <logger name="org.apache.activemq" level="warn">
+        <appender-ref ref="RollingFile"/>
+    </logger>
+
+    <!--Application log is appended to the Console and TraceRollingFile，The default level is ERROR-->
+    <root level="debug">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="TraceRollingFile"/>
+    </root>
+</configuration>
+

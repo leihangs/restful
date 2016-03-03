@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- 注册 数据库配置文件-->
+    <!--<context:property-placeholder location="classpath:db-c3p0.properties"/>-->
+    <context:property-placeholder location="classpath:db-druid.properties"/>
+
+    <!--&lt;!&ndash; 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 &ndash;&gt;-->
+    <!--<context:component-scan base-package="com.showcase.restful.data"/>-->
+
+    <!-- c3p0 datasource -->
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"-->
+          <!--destroy-method="close">-->
+        <!--<property name="driverClass" value="${db.driverClassName}"/>-->
+        <!--<property name="jdbcUrl" value="${db.url}"/>-->
+        <!--<property name="user" value="${db.username}"/>-->
+        <!--<property name="password" value="${db.password}"/>-->
+        <!--<property name="minPoolSize">-->
+            <!--<value>${db.minActive}</value>-->
+        <!--</property>-->
+        <!--<property name="maxPoolSize">-->
+            <!--<value>${db.maxActive}</value>-->
+        <!--</property>-->
+        <!--<property name="initialPoolSize">-->
+            <!--<value>${db.initialSize}</value>-->
+        <!--</property>-->
+        <!--<property name="maxIdleTime">-->
+            <!--<value>${db.maxIdle}</value>-->
+        <!--</property>-->
+        <!--<property name="acquireIncrement">-->
+            <!--<value>${db.acquireIncrement}</value>-->
+        <!--</property>-->
+        <!--<property name="idleConnectionTestPeriod">-->
+            <!--<value>${db.idleConnectionTestPeriod}</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!-- 数据源配置, 使用druid连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${db.driverClassName}" />
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}" />
+        <property name="password" value="${db.password}" />
+        <property name="filters" value="mergeStat" />
+        <!-- 密码解密 -->
+        <!-- <property name="filters" value="config" />
+        <property name="connectionProperties" value="config.decrypt=true" /> -->
+        <!-- 申请连接的时候检测 -->
+        <property name="testWhileIdle" value="true"></property>
+        <!-- 检测连接 -->
+        <property name="validationQuery" value="select 'x'"></property>
+        <!--maxActive: 最大连接数量 -->
+        <property name="maxActive" value="${db.maxActive}" />
+        <!--initialSize: 初始化连接 -->
+        <property name="initialSize" value="${db.maxIdle}" />
+    </bean>
+
+    <!-- mybitas sqlSessionFactory -->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation"
+                  value="classpath:mybatis-resources.xml"></property>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:com/showcase/restful/data/mybatis/mappers/**Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--jdbcTemplate define -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <!-- 事务定义 start -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--默认事务声明-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="NESTED"/>
+            <tx:method name="update*" propagation="NESTED"/>
+            <tx:method name="delete*" propagation="NESTED"/>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+
+</beans>
+
