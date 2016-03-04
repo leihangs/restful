@@ -117,6 +117,19 @@
             <version>${commons_lang3.version}</version>
         </dependency>
 
+        <!-- memcached -->
+        <dependency>
+            <groupId>com.googlecode.xmemcached</groupId>
+            <artifactId>xmemcached</artifactId>
+            <version>${memcache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.danga</groupId>
+            <artifactId>java_memcached-release</artifactId>
+            <version>${danga.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>

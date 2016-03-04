@@ -21,6 +21,8 @@ public interface ProductDao {
 
     public Product getProduct(int productId);
 
+    public List<Product> getProductListAll();
+
     public List<Product> getProducts(Page<Product> page, Product product);
 
     public long getProductsCount(Page<Product> page, Product product);

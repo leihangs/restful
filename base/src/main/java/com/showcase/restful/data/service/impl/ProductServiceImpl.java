@@ -1,9 +1,11 @@
 package com.showcase.restful.data.service.impl;
 
+import com.showcase.restful.common.MemcachedConstants;
 import com.showcase.restful.data.dao.ProductDao;
 import com.showcase.restful.data.entity.Page;
 import com.showcase.restful.data.entity.Product;
 import com.showcase.restful.data.service.ProductService;
+import com.showcase.restful.memcached.BaseMemcachedCachedProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
 
+    @Autowired
+    private BaseMemcachedCachedProxy baseMemcachedCachedProxy;
+
     public boolean saveProduct(Product product) {
         return productDao.saveProduct(product);
     }
@@ -32,7 +37,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Product getProduct(int productId) {
-        return productDao.getProduct(productId);
+        Product product = (Product) baseMemcachedCachedProxy.get(MemcachedConstants.PRODUCT_KEY + productId);
+        if (product == null) {
+            product = productDao.getProduct(productId);
+            if (product != null) {
+                baseMemcachedCachedProxy.set(MemcachedConstants.PRODUCT_KEY + productId, product);
+            }
+        }
+        return product;
     }
 
     public Page<Product> getProducts(Page<Product> page, Product product) {

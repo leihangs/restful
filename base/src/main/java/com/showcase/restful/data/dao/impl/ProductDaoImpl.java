@@ -73,4 +73,8 @@ public class ProductDaoImpl extends MyBatisBaseDAO<Product> implements ProductDa
         conditionMap.put("order", page.getOrder());
         return getTotalCount(mapperNameSpace + ".getProductListPageCount", conditionMap);
     }
+
+    public List<Product> getProductListAll() {
+        return getList(mapperNameSpace + ".getProductListAll");
+    }
 }
