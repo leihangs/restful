@@ -17,7 +17,7 @@ public class ApiConstants {
      * 1001：
      * 90：未知错误
      */
-    public final static String SUCCESS = "00";
+    public final static String SUCCESS_STATUS = "00";
 
     //参数无效
     public final static String PARAM_INVALID = "10";

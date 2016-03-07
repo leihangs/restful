@@ -1,4 +1,4 @@
-package com.showcase.restful.common;
+package com.showcase.restful.api.common;
 
 import java.io.Serializable;
 
