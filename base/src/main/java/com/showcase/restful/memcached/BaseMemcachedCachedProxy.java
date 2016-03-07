@@ -14,13 +14,7 @@ public class BaseMemcachedCachedProxy extends AbstractMemcachedClientProxy {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public Object getValue(String key) {
-        Object paramValue = null;
-        try {
-            paramValue = get(key);
-        } catch (DataAccessException e) {
-            this.logger.error("paramDAO.getParamValue exception,e={}", e);
-        }
-        return paramValue;
+        return get(key);
     }
 
     public boolean set(String key, int expireTimes, Object obj) {

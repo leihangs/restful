@@ -17,8 +17,9 @@ import java.util.List;
  */
 
 public class MemCacheInfoLoad {
-    private final Logger logger = LoggerFactory.getLogger(MemCacheInfoLoad.class);
+
     @Autowired
+
     private BaseMemcachedCachedProxy memcachedProxy;
     @Autowired
     private ProductDao productDao;

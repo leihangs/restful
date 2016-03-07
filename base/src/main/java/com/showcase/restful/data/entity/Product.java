@@ -1,5 +1,6 @@
 package com.showcase.restful.data.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Date;
  * @description: 产品信息
  */
 
-public class Product {
+public class Product implements Serializable {
 
     //产品编码
     private int productId;

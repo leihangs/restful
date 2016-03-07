@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
-       default-lazy-init="true">
+       default-lazy-init="false">
 
     <!--XMemcached客户端定义-->
     <bean id="memcachedClient" class="com.showcase.restful.memcached.MemcachedClient">
-        <property name="memcachedNodes" value="${api.memcached.url}"/>
-        <property name="connectionPoolSize" value="${api.memcached.connectionPoolSize}"/>
+        <property name="memcachedNodes" value="127.0.0.1:11211"/>
+        <property name="connectionPoolSize" value="5"/>
     </bean>
 
     <!--定义memcached使用的代理类-->
@@ -15,6 +15,6 @@
     </bean>
 
     <!--初始化 加载数据信息 -->
-    <bean id="appInfoPlatLoader" class="com.showcase.restful.load.MemCacheInfoLoad" init-method="init"/>
+    <bean id="cacheInfoLoader" class="com.showcase.restful.load.MemCacheInfoLoad" init-method="init"/>
 
 </beans>
